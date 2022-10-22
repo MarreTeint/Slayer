@@ -35,10 +35,10 @@ type Character struct {
 	Body image.Image	
 }
 func MoveDown(Character *Character) {
-	Character.Y--
+	Character.Y++
 }
 func MoveUp(Character *Character) {
-	Character.Y++
+	Character.Y--
 }
 func MoveLeft(Character *Character) {
 	Character.X--
@@ -68,6 +68,19 @@ type Game struct{
 }
 
 func (g *Game) Update() error {
+	if ebiten.IsKeyPressed(ebiten.KeyDown) {
+		MoveDown(&g.Player)
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyUp) {
+		MoveUp(&g.Player)
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+		MoveLeft(&g.Player)
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyRight) {
+		MoveRight(&g.Player)
+	}
+
 	return nil
 }
 
@@ -82,7 +95,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return 1600, 1200
 }
 
 func main() {
