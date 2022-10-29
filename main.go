@@ -32,7 +32,8 @@ type Character struct {
 	// Character's equipment
 	Equipment []Item
 	// Character's body asset
-	Body image.Image	
+	Body image.Image
+	assetRow, assetCol int	
 }
 func MoveDown(Character *Character) {
 	Character.Y++
@@ -69,15 +70,23 @@ type Game struct{
 
 func (g *Game) Update() error {
 	if ebiten.IsKeyPressed(ebiten.KeyDown) {
+		g.Player.assetRow = (g.Player.assetRow+1)%4
+		g.Player.assetCol = 0
 		MoveDown(&g.Player)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyUp) {
+		g.Player.assetRow = (g.Player.assetRow+1)%4
+		g.Player.assetCol = 1
 		MoveUp(&g.Player)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+		g.Player.assetRow = (g.Player.assetRow+1)%4
+		g.Player.assetCol = 2
 		MoveLeft(&g.Player)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
+		g.Player.assetRow = (g.Player.assetRow+1)%4
+		g.Player.assetCol = 3
 		MoveRight(&g.Player)
 	}
 
@@ -87,7 +96,7 @@ func (g *Game) Update() error {
 func (g *Game) Draw(screen *ebiten.Image) {
 	// draw the player's body
 	var img = ebiten.NewImageFromImage(g.Player.Body)
-	var subimg = img.SubImage(image.Rect(0, 0, 64, 64)).(*ebiten.Image)
+	var subimg = img.SubImage(image.Rect(g.Player.assetCol*16, g.Player.assetRow*16, g.Player.assetCol*16+16, g.Player.assetRow*16+16)).(*ebiten.Image)
 	//player position
 	var op = &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(g.Player.X, g.Player.Y)
@@ -95,14 +104,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 1600, 1200
+	return 254,254 
 }
 
 func main() {
-	ebiten.SetWindowSize(1600, 1200)
+	ebiten.SetWindowSize(1000, 500)
 	ebiten.SetWindowTitle("Slayer")
 
-	imgFile,err := os.Open("assets/character/char_a_p1/char_a_p1_0bas_humn_v01.png")
+	imgFile,err := os.Open("assets/NinjaAdventure/Actor/Characters/Boy/SpriteSheet.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -126,6 +135,8 @@ func main() {
 		Inventory: []Item{},
 		Equipment: []Item{},
 		Body: img,
+		assetRow: 0,
+		assetCol: 0,
 	}
 	
 	if err := ebiten.RunGame(&Game{player}); err != nil {
