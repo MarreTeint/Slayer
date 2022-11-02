@@ -67,23 +67,34 @@ type Item struct {
 type Game struct{
 	// Game's player
 	Player Character
+	frame int
 }
 
 func (g *Game) Update() error {
+	g.frame++
+	var frame = g.frame%60
 	if ebiten.IsKeyPressed(ebiten.KeyDown) {
-		g.Player.assetRow = (g.Player.assetRow+1)%4
+		if(frame%15==0){
+			g.Player.assetRow = (g.Player.assetRow+1)%4
+		}
 		g.Player.assetCol = 0
 		MoveDown(&g.Player)
 	}else if ebiten.IsKeyPressed(ebiten.KeyUp) {
-		g.Player.assetRow = (g.Player.assetRow+1)%4
+		if(frame%15==0){
+			g.Player.assetRow = (g.Player.assetRow+1)%4
+		}
 		g.Player.assetCol = 1
 		MoveUp(&g.Player)
 	}else if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		g.Player.assetRow = (g.Player.assetRow+1)%4
+		if(frame%15==0){
+			g.Player.assetRow = (g.Player.assetRow+1)%4
+		}
 		g.Player.assetCol = 2
 		MoveLeft(&g.Player)
 	}else if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		g.Player.assetRow = (g.Player.assetRow+1)%4
+		if(frame%15==0){
+			g.Player.assetRow = (g.Player.assetRow+1)%4
+		}
 		g.Player.assetCol = 3
 		MoveRight(&g.Player)
 	}else{
@@ -161,7 +172,8 @@ func main() {
 		assetRow: 0,
 		assetCol: 0,
 	}
-	if err := ebiten.RunGame(&Game{player}); err != nil {
+	var frame = 0;
+	if err := ebiten.RunGame(&Game{player, frame}); err != nil {
 		log.Fatal(err)
 	}
 }
