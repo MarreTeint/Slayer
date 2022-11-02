@@ -37,16 +37,24 @@ type Character struct {
 	assetRow, assetCol int	
 }
 func MoveDown(Character *Character) {
-	Character.Y++
+	if(Character.Y < 256-16){
+		Character.Y++
+	}
 }
 func MoveUp(Character *Character) {
-	Character.Y--
+	if(Character.Y > 0){
+		Character.Y--
+	}
 }
 func MoveLeft(Character *Character) {
-	Character.X--
+	if(Character.X > 0){
+		Character.X--
+	}
 }
 func MoveRight(Character *Character) {
-	Character.X++
+	if(Character.X < 256-16){
+		Character.X++
+	}
 }
 
 type Item struct {
@@ -74,25 +82,25 @@ func (g *Game) Update() error {
 	g.frame++
 	var frame = g.frame%60
 	if ebiten.IsKeyPressed(ebiten.KeyDown) {
-		if(frame%15==0){
+		if(frame%10==0){
 			g.Player.assetRow = (g.Player.assetRow+1)%4
 		}
 		g.Player.assetCol = 0
 		MoveDown(&g.Player)
 	}else if ebiten.IsKeyPressed(ebiten.KeyUp) {
-		if(frame%15==0){
+		if(frame%10==0){
 			g.Player.assetRow = (g.Player.assetRow+1)%4
 		}
 		g.Player.assetCol = 1
 		MoveUp(&g.Player)
 	}else if ebiten.IsKeyPressed(ebiten.KeyLeft) {
-		if(frame%15==0){
+		if(frame%10==0){
 			g.Player.assetRow = (g.Player.assetRow+1)%4
 		}
 		g.Player.assetCol = 2
 		MoveLeft(&g.Player)
 	}else if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		if(frame%15==0){
+		if(frame%10==0){
 			g.Player.assetRow = (g.Player.assetRow+1)%4
 		}
 		g.Player.assetCol = 3
@@ -127,6 +135,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			screen.DrawImage(subback, backop)
 		}
 	}
+	//draw shadow of player
+	imgShad,err := os.Open("assets/NinjaAdventure/Actor/Characters/Shadow.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	shad, _, err := image.Decode(imgShad)
+	if err != nil {
+		log.Fatal(err)
+	}
+	imgFile.Close()
+	var shadow = ebiten.NewImageFromImage(shad)
+	var opshadow = &ebiten.DrawImageOptions{}
+	opshadow.GeoM.Translate(g.Player.X+2, g.Player.Y+12)
+	screen.DrawImage(shadow, opshadow)
 	
 	// draw the player's body
 	var img = ebiten.NewImageFromImage(g.Player.Body)
@@ -138,7 +160,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 254,254 
+	return 256,256 
 }
 
 func main() {
