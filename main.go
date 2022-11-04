@@ -118,26 +118,6 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// draw background
-	/*imgFile,err := os.Open("assets/NinjaAdventure/Backgrounds/Tilesets/TilesetFloor.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	back, _, err := image.Decode(imgFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	imgFile.Close()
-	var background = ebiten.NewImageFromImage(back)
-	var subback = background.SubImage(image.Rect(0*16, 4*16, 1*16, 5*16)).(*ebiten.Image)
-	for i := 0; i < 32; i++ {
-		for j := 0; j < 32; j++ {
-			var backop = &ebiten.DrawImageOptions{}
-			backop.GeoM.Translate(float64(i*16), float64(j*16))
-			screen.DrawImage(subback, backop)
-		}
-	}*/
-
 	// draw local map
 	screen.DrawImage(g.tile, nil)
 
